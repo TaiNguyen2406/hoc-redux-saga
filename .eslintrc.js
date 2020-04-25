@@ -14,6 +14,12 @@ module.exports = {
     "prettier",
   ],
   rules: {
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto",
+      },
+    ],
     "react/prop-types": 1,
     "react/jsx-max-props-per-line": 1,
     "react/prefer-stateless-function": 0,
@@ -27,12 +33,6 @@ module.exports = {
     "import/no-extraneous-dependencies": 0,
     "class-methods-use-this": 0,
     "jsx-quotes": 0,
-    "prettier/prettier": [
-      "error",
-      {
-        endOfLine: "auto",
-      },
-    ],
     "no-unused-vars": 0,
     "import/extension": 0,
     "import/order": 1,
@@ -40,6 +40,8 @@ module.exports = {
     "no-param-reassign": 0,
     "no-var": 0,
     "no-console": 0,
+    "import/order": 0,
+    "import/prefer-default-export": 0,
   },
   plugins: ["prettier"],
   env: {

@@ -3,38 +3,20 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, Component, useEffect } from 'react';
 import TaskForm from '../../components/TaskForm';
 import TaskList from '../../components/TaskList';
 import { STATUES } from '../../constants';
 import styles from './styles';
-
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as taskActions from '../../actions/task';
 // React.state = {
 //   open: false
 // }
 
-const listTask = [
-  {
-    id: 1,
-    title: 'Read book',
-    description: 'Read c sharp book',
-    status: 0,
-  },
-  {
-    id: 2,
-    title: 'Play video game',
-    description: 'Play csgo with my friends',
-    status: 1,
-  },
-  {
-    id: 3,
-    title: 'Learning something new',
-    description: 'ReactJs',
-    status: 2,
-  },
-];
-
-function renderBoard() {
+function renderBoard(props) {
+  const { listTask } = props;
   let xhtml = null;
   xhtml = (
     <Grid container spacing={2}>
@@ -62,6 +44,12 @@ function RenderForm(open, handleClose) {
 }
 
 function TaskBoard(props) {
+  useEffect(() => {
+    const { taskActionCreators } = props;
+    const { fetchListTaskRequest } = taskActionCreators;
+    fetchListTaskRequest();
+  }, []);
+
   const { classes } = props;
   const [open, setOpen] = useState(false);
   const handleClose = () => {
@@ -80,7 +68,7 @@ function TaskBoard(props) {
       >
         <AddIcon /> Add a new task
       </Button>
-      {renderBoard(classes)}
+      {renderBoard(props)}
       {RenderForm(open, handleClose)}
     </div>
   );
@@ -88,6 +76,22 @@ function TaskBoard(props) {
 
 TaskBoard.propTypes = {
   classes: PropTypes.object,
+  taskActionCreators: PropTypes.shape({
+    fetchListTaskRequest: PropTypes.func,
+  }),
 };
 
-export default withStyles(styles)(TaskBoard);
+const mapStateToProps = (state) => {
+  return {
+    listTask: state.task.listTask,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    taskActionCreators: bindActionCreators(taskActions, dispatch),
+  };
+};
+
+export default withStyles(styles)(
+  connect(mapStateToProps, mapDispatchToProps)(TaskBoard),
+);

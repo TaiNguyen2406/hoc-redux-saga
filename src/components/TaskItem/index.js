@@ -11,7 +11,7 @@ import Icon from '@material-ui/core/Icon';
 
 function TaskItem(props) {
   const { task, classes, status } = props;
-  const { id, title } = task;
+  const { title } = task;
   return (
     <Card key={task.id} className={classes.card}>
       <CardContent>
