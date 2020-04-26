@@ -42,13 +42,17 @@ function RenderForm(open, handleClose) {
   xhtml = <TaskForm open={open} handleClose={handleClose} />;
   return xhtml;
 }
-
+function loadData(data) {
+  const { taskActionCreators } = data;
+  const { fetchListTask } = taskActionCreators;
+  fetchListTask();
+}
 function TaskBoard(props) {
-  useEffect(() => {
+  /* useEffect(() => {
     const { taskActionCreators } = props;
-    const { fetchListTaskRequest } = taskActionCreators;
-    fetchListTaskRequest();
-  }, []);
+    const { fetchListTask } = taskActionCreators;
+    fetchListTask();X
+  }, []); */
 
   const { classes } = props;
   const [open, setOpen] = useState(false);
@@ -60,6 +64,15 @@ function TaskBoard(props) {
   };
   return (
     <div className={classes.taskboard}>
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        onClick={() => loadData(props)}
+      >
+        {' '}
+        Load data
+      </Button>
       <Button
         variant="contained"
         color="primary"
@@ -77,7 +90,7 @@ function TaskBoard(props) {
 TaskBoard.propTypes = {
   classes: PropTypes.object,
   taskActionCreators: PropTypes.shape({
-    fetchListTaskRequest: PropTypes.func,
+    fetchListTask: PropTypes.func,
   }),
 };
 
