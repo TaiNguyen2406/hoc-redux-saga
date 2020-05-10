@@ -11,6 +11,8 @@ import styles from './styles';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as taskActions from '../../actions/task';
+import * as modalActions from '../../actions/modal';
+import SearchBox from '../SearchBox';
 // React.state = {
 //   open: false
 // }
@@ -47,20 +49,43 @@ function loadData(data) {
   const { fetchListTask } = taskActionCreators;
   fetchListTask();
 }
+
+const handleFilter = (e) => {
+  const { value } = e.target;
+  const { taskActionCreators } = globalProps;
+  const { filterTask } = taskActionCreators;
+  filterTask(value);
+};
+
+function renderSearchBox(props) {
+  let xhtml = null;
+  xhtml = <SearchBox handleChange={handleFilter} />;
+  return xhtml;
+}
+let globalProps = null;
 function TaskBoard(props) {
   /* useEffect(() => {
     const { taskActionCreators } = props;
     const { fetchListTask } = taskActionCreators;
     fetchListTask();X
   }, []); */
-
+  globalProps = props;
   const { classes } = props;
   const [open, setOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
   };
   const openForm = () => {
-    setOpen(true);
+    const { modalActionCreators } = props;
+    const {
+      showModal,
+      changeModalTitle,
+      changeModalContent,
+    } = modalActionCreators;
+    showModal();
+    changeModalTitle('Add a new task');
+    changeModalContent(<TaskForm />);
+    /* setOpen(true); */
   };
   return (
     <div className={classes.taskboard}>
@@ -81,6 +106,7 @@ function TaskBoard(props) {
       >
         <AddIcon /> Add a new task
       </Button>
+      {renderSearchBox()}
       {renderBoard(props)}
       {RenderForm(open, handleClose)}
     </div>
@@ -91,6 +117,13 @@ TaskBoard.propTypes = {
   classes: PropTypes.object,
   taskActionCreators: PropTypes.shape({
     fetchListTask: PropTypes.func,
+    filterTask: PropTypes.func,
+  }),
+  modalActionCreators: PropTypes.shape({
+    showModal: PropTypes.func,
+    hideModal: PropTypes.func,
+    changeModalTitle: PropTypes.func,
+    changeModalContent: PropTypes.func,
   }),
 };
 
@@ -102,8 +135,11 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     taskActionCreators: bindActionCreators(taskActions, dispatch),
+    modalActionCreators: bindActionCreators(modalActions, dispatch),
   };
 };
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default withStyles(styles)(
   connect(mapStateToProps, mapDispatchToProps)(TaskBoard),

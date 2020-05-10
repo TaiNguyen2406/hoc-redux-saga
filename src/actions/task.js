@@ -44,3 +44,17 @@ export const fetchListTaskRequest = () => {
       });
   };
 };
+
+export const filterTask = (keyword) => ({
+  type: taskConstants.FILTER_TASK,
+  payload: {
+    keyword,
+  },
+});
+
+export const filterTaskSuccess = (data) => ({
+  type: taskConstants.FILTER_TASK_SUCCESS,
+  payload: {
+    data,
+  },
+});
